@@ -383,6 +383,17 @@ type (
 		// WARNING: Worker versioning is currently experimental, and requires server 1.24+
 		GetWorkerVersioningRules(ctx context.Context, options GetWorkerVersioningOptions) (*WorkerVersioningRules, error)
 
+		// UpdateTaskQueueConfig updates task queue configuration.
+		// For the overall queue rate limit: the rate limit set by this api overrides the worker-set rate limit,
+		// which uncouples the rate limit from the worker lifecycle.
+		// If the overall queue rate limit is unset, the worker-set rate limit takes effect.
+		// The errors it can return:
+		//  - serviceerror.InvalidArgument
+		//  - serviceerror.Internal
+		//  - serviceerror.Unavailable
+		//  - serviceerror.NotFound
+		UpdateTaskQueueConfig(ctx context.Context, options UpdateTaskQueueConfigOptions) (*TaskQueueConfig, error)
+
 		// CheckHealth performs a server health check using the gRPC health check
 		// API. If the check fails, an error is returned.
 		CheckHealth(ctx context.Context, request *CheckHealthRequest) (*CheckHealthResponse, error)

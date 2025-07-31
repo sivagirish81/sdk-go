@@ -786,6 +786,15 @@ type (
 	// WARNING: Worker versioning is currently experimental.
 	VersioningRedirectRuleWithTimestamp = internal.VersioningRedirectRuleWithTimestamp //lint:ignore SA1019 transitioning to Worker Deployments
 
+	// UpdateTaskQueueConfigOptions is the input to [client.Client.UpdateTaskQueueConfig].
+	UpdateTaskQueueConfigOptions = internal.UpdateTaskQueueConfigOptions
+
+	// QueueRateLimitUpdate represents a rate limit update with an optional reason.
+	QueueRateLimitUpdate = internal.QueueRateLimitUpdate
+
+	// TaskQueueConfig is the response to [client.Client.UpdateTaskQueueConfig].
+	TaskQueueConfig = internal.TaskQueueConfig
+
 	// VersioningOperationInsertAssignmentRule is an operation for UpdateWorkerVersioningRulesOptions
 	// that inserts the rule to the list of assignment rules for this Task Queue.
 	// The rules are evaluated in order, starting from index 0. The first
@@ -1248,6 +1257,17 @@ type (
 		//
 		// WARNING: Worker versioning is currently experimental, and requires server 1.24+
 		GetWorkerVersioningRules(ctx context.Context, options GetWorkerVersioningOptions) (*WorkerVersioningRules, error)
+
+		// UpdateTaskQueueConfig updates task queue configuration.
+		// For the overall queue rate limit: the rate limit set by this api overrides the worker-set rate limit,
+		// which uncouples the rate limit from the worker lifecycle.
+		// If the overall queue rate limit is unset, the worker-set rate limit takes effect.
+		// The errors it can return:
+		//  - serviceerror.InvalidArgument
+		//  - serviceerror.Internal
+		//  - serviceerror.Unavailable
+		//  - serviceerror.NotFound
+		UpdateTaskQueueConfig(ctx context.Context, options UpdateTaskQueueConfigOptions) (*TaskQueueConfig, error)
 
 		// CheckHealth performs a server health check using the gRPC health check
 		// API. If the check fails, an error is returned.

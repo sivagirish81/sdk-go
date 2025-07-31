@@ -682,6 +682,11 @@ func (t *testSuiteClientForNexusOperations) UpdateWorkflowExecutionOptions(ctx c
 	panic("not implemented in the test environment")
 }
 
+// UpdateTaskQueueConfig implements Client.
+func (t *testSuiteClientForNexusOperations) UpdateTaskQueueConfig(ctx context.Context, options UpdateTaskQueueConfigOptions) (*TaskQueueConfig, error) {
+	panic("not implemented in the test environment")
+}
+
 var _ Client = &testSuiteClientForNexusOperations{}
 
 // testEnvWorkflowRunForNexusOperations is a partial [WorkflowRun] implementation for the test workflow environment used
