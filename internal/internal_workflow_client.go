@@ -1216,6 +1216,30 @@ func (wc *WorkflowClient) GetWorkerVersioningRules(ctx context.Context, options 
 	return workerVersioningRulesFromProtoGetResponse(resp), nil
 }
 
+// UpdateTaskQueueConfig updates task queue configuration.
+// For the overall queue rate limit: the rate limit set by this api overrides the worker-set rate limit,
+// which uncouples the rate limit from the worker lifecycle.
+// If the overall queue rate limit is unset, the worker-set rate limit takes effect.
+func (wc *WorkflowClient) UpdateTaskQueueConfig(ctx context.Context, options UpdateTaskQueueConfigOptions) (*TaskQueueConfig, error) {
+	if err := wc.ensureInitialized(ctx); err != nil {
+		return nil, err
+	}
+
+	request, err := options.validateAndConvertToProto(wc.namespace)
+	if err != nil {
+		return nil, err
+	}
+
+	grpcCtx, cancel := newGRPCContext(ctx, defaultGrpcRetryParameters(ctx))
+	defer cancel()
+
+	resp, err := wc.workflowService.UpdateTaskQueueConfig(grpcCtx, request)
+	if err != nil {
+		return nil, err
+	}
+	return taskQueueConfigFromProtoResponse(resp), nil
+}
+
 func (wc *WorkflowClient) GetWorkflowUpdateHandle(ref GetWorkflowUpdateHandleOptions) WorkflowUpdateHandle {
 	return &lazyUpdateHandle{
 		client: wc,
